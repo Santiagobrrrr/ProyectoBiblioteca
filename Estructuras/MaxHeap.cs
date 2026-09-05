@@ -25,6 +25,36 @@ namespace ProyectoBiblioteca.Estructuras
             cantidad++;
         }
 
+        public Libro VerMaximo()
+        {
+            if (cantidad == 0)
+            {
+                throw new InvalidOperationException("El Max Heap está vacío.");
+            }
+
+            return heap[0];
+        }
+
+        public Libro EliminarMaximo()
+        {
+            if (cantidad == 0)
+            {
+                throw new InvalidOperationException("El Max Heap está vacío.");
+            }
+
+            Libro maximo = heap[0];
+
+            cantidad--;
+
+            if (cantidad > 0)
+            {
+                heap[0] = heap[cantidad];
+                Bajar(0);
+            }
+
+            return maximo;
+        }
+
         private void Subir(int indice)
         {
             while (indice > 0)
@@ -38,6 +68,36 @@ namespace ProyectoBiblioteca.Estructuras
 
                 Intercambiar(indice, padre);
                 indice = padre;
+            }
+        }
+
+        private void Bajar(int indice)
+        {
+            while (true)
+            {
+                int izquierdo = (2 * indice) + 1;
+                int derecho = (2 * indice) + 2;
+                int mayor = indice;
+
+                if (izquierdo < cantidad &&
+                    heap[izquierdo].VecesPrestado > heap[mayor].VecesPrestado)
+                {
+                    mayor = izquierdo;
+                }
+
+                if (derecho < cantidad &&
+                    heap[derecho].VecesPrestado > heap[mayor].VecesPrestado)
+                {
+                    mayor = derecho;
+                }
+
+                if (mayor == indice)
+                {
+                    break;
+                }
+
+                Intercambiar(indice, mayor);
+                indice = mayor;
             }
         }
 

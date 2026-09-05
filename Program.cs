@@ -45,3 +45,26 @@ maxHeap.Insertar(libro3);
 maxHeap.Insertar(libro4);
 
 maxHeap.Imprimir();
+
+Console.WriteLine("\nMAX HEAP INICIAL:");
+maxHeap.Imprimir();
+
+Console.WriteLine("\nLIBRO MÁS PRESTADO:");
+
+Libro mayor = maxHeap.VerMaximo();
+
+Console.WriteLine(
+    $"{mayor.Titulo} - {mayor.VecesPrestado} préstamos"
+);
+
+Console.WriteLine("\nELIMINANDO EL MÁXIMO:");
+
+Libro eliminado = maxHeap.EliminarMaximo();
+
+Console.WriteLine(
+    $"Eliminado: {eliminado.Titulo}"
+);
+
+Console.WriteLine("\nMAX HEAP DESPUÉS DE ELIMINAR:");
+
+maxHeap.Imprimir();
