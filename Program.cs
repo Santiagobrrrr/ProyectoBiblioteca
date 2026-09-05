@@ -68,3 +68,14 @@ Console.WriteLine(
 Console.WriteLine("\nMAX HEAP DESPUÉS DE ELIMINAR:");
 
 maxHeap.Imprimir();
+
+MinHeap minHeap = new MinHeap(3);
+
+minHeap.Insertar(libro1);
+minHeap.Insertar(libro2);
+minHeap.Insertar(libro3);
+minHeap.Insertar(libro4);
+
+Console.WriteLine("\nMIN HEAP:");
+
+minHeap.Imprimir();
