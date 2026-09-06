@@ -25,6 +25,36 @@ namespace ProyectoBiblioteca.Estructuras
             cantidad++;
         }
 
+        public Libro VerMinimo()
+        {
+            if (cantidad == 0)
+            {
+                throw new InvalidOperationException("El Min Heap está vacío.");
+            }
+
+            return heap[0];
+        }
+
+        public Libro EliminarMinimo()
+        {
+            if (cantidad == 0)
+            {
+                throw new InvalidOperationException("El Min Heap está vacío.");
+            }
+
+            Libro minimo = heap[0];
+
+            cantidad--;
+
+            if (cantidad > 0)
+            {
+                heap[0] = heap[cantidad];
+                Bajar(0);
+            }
+
+            return minimo;
+        }
+
         private void Subir(int indice)
         {
             while (indice > 0)
@@ -39,6 +69,36 @@ namespace ProyectoBiblioteca.Estructuras
 
                 Intercambiar(indice, padre);
                 indice = padre;
+            }
+        }
+
+        private void Bajar(int indice)
+        {
+            while (true)
+            {
+                int izquierdo = (2 * indice) + 1;
+                int derecho = (2 * indice) + 2;
+                int menor = indice;
+
+                if (izquierdo < cantidad &&
+                    heap[izquierdo].CopiasDisponibles < heap[menor].CopiasDisponibles)
+                {
+                    menor = izquierdo;
+                }
+
+                if (derecho < cantidad &&
+                    heap[derecho].CopiasDisponibles < heap[menor].CopiasDisponibles)
+                {
+                    menor = derecho;
+                }
+
+                if (menor == indice)
+                {
+                    break;
+                }
+
+                Intercambiar(indice, menor);
+                indice = menor;
             }
         }
 
