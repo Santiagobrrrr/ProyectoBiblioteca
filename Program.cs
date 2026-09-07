@@ -1,6 +1,7 @@
 ﻿using ProyectoBiblioteca.Modelos;
 using ProyectoBiblioteca.Estructuras;
 
+// Crear libros de prueba
 Libro libro1 = new Libro(
     1001,
     "El Principito",
@@ -32,7 +33,7 @@ Libro libro4 = new Libro(
     1004,
     "1984",
     "George Orwell",
-    "Literatura",
+    "Ciencia ficción",
     2,
     25
 );
@@ -73,6 +74,13 @@ Libro libro8 = new Libro(
     19
 );
 
+
+// =======================
+// MAX HEAP
+// =======================
+
+Console.WriteLine("\n===== MAX HEAP =====");
+
 MaxHeap maxHeap = new MaxHeap(3);
 
 maxHeap.Insertar(libro1);
@@ -84,49 +92,44 @@ maxHeap.Insertar(libro6);
 maxHeap.Insertar(libro7);
 maxHeap.Insertar(libro8);
 
-Console.WriteLine("\nContenido del Max Heap:");
-
+Console.WriteLine("\nContenido:");
 maxHeap.Imprimir();
 
-
-Console.WriteLine("\nLibro más prestado:");
-
-Libro libroMaximo = maxHeap.VerMaximo();
+Libro maximo = maxHeap.VerMaximo();
 
 Console.WriteLine(
-    $"{libroMaximo.Titulo} - " +
-    $"{libroMaximo.VecesPrestado} préstamos"
+    $"\nMás prestado: {maximo.Titulo} - " +
+    $"{maximo.VecesPrestado} préstamos"
 );
-
-// Prueba de búsqueda por código
-Console.WriteLine("\nBuscando código 1006:");
 
 Libro? encontradoMax = maxHeap.BuscarPorCodigo(1006);
 
 if (encontradoMax != null)
 {
     Console.WriteLine(
-        $"Encontrado: {encontradoMax.Titulo}"
+        $"Código 1006 encontrado: {encontradoMax.Titulo}"
     );
 }
 else
 {
-    Console.WriteLine("Libro no encontrado.");
+    Console.WriteLine("Código 1006 no encontrado.");
 }
-
-
-// Prueba de eliminación
-Console.WriteLine("\nEliminando libro más prestado:");
 
 Libro eliminadoMax = maxHeap.EliminarMaximo();
 
 Console.WriteLine(
-    $"Eliminado: {eliminadoMax.Titulo}"
+    $"\nMáximo eliminado: {eliminadoMax.Titulo}"
 );
 
 Console.WriteLine("\nMax Heap después de eliminar:");
-
 maxHeap.Imprimir();
+
+
+// =======================
+// MIN HEAP
+// =======================
+
+Console.WriteLine("\n===== MIN HEAP =====");
 
 MinHeap minHeap = new MinHeap(3);
 
@@ -139,33 +142,31 @@ minHeap.Insertar(libro6);
 minHeap.Insertar(libro7);
 minHeap.Insertar(libro8);
 
-Console.WriteLine("\nContenido del Min Heap:");
-
+Console.WriteLine("\nContenido:");
 minHeap.Imprimir();
 
-
-Console.WriteLine("\nLibro con menos copias disponibles:");
-
-Libro libroMinimo = minHeap.VerMinimo();
+Libro minimo = minHeap.VerMinimo();
 
 Console.WriteLine(
-    $"{libroMinimo.Titulo} - " +
-    $"{libroMinimo.CopiasDisponibles} copias"
+    $"\nMenor disponibilidad: {minimo.Titulo} - " +
+    $"{minimo.CopiasDisponibles} copias"
 );
-
-
-// Prueba de eliminación
-Console.WriteLine("\nEliminando libro con menos copias:");
 
 Libro eliminadoMin = minHeap.EliminarMinimo();
 
 Console.WriteLine(
-    $"Eliminado: {eliminadoMin.Titulo}"
+    $"\nMínimo eliminado: {eliminadoMin.Titulo}"
 );
 
 Console.WriteLine("\nMin Heap después de eliminar:");
-
 minHeap.Imprimir();
+
+
+// =======================
+// ÁRBOL B+
+// =======================
+
+Console.WriteLine("\n===== ÁRBOL B+ =====");
 
 ArbolBPlus arbol = new ArbolBPlus(4);
 
@@ -178,10 +179,14 @@ arbol.Insertar(libro6);
 arbol.Insertar(libro7);
 arbol.Insertar(libro8);
 
-Console.WriteLine("\nLibros almacenados en el Árbol B+:");
-
+Console.WriteLine("\nEstructura:");
 arbol.Imprimir();
 
+Console.WriteLine("\nRecorrido:");
+arbol.Recorrer();
+
+
+// Buscar un código existente
 Console.WriteLine("\nBuscando código 1006:");
 
 Libro? encontradoArbol = arbol.Buscar(1006);
@@ -191,31 +196,56 @@ if (encontradoArbol != null)
     Console.WriteLine(
         $"Encontrado: {encontradoArbol.Titulo}"
     );
-
-    Console.WriteLine(
-        $"Autor: {encontradoArbol.Autor}"
-    );
-
-    Console.WriteLine(
-        $"Categoría: {encontradoArbol.Categoria}"
-    );
 }
 else
 {
     Console.WriteLine("Libro no encontrado.");
 }
 
+
+// Buscar un código inexistente
 Console.WriteLine("\nBuscando código 9999:");
 
-Libro? noEncontrado = arbol.Buscar(9999);
+Libro? inexistente = arbol.Buscar(9999);
 
-if (noEncontrado != null)
+if (inexistente == null)
+{
+    Console.WriteLine("Código 9999 no existe.");
+}
+else
 {
     Console.WriteLine(
-        $"Encontrado: {noEncontrado.Titulo}"
+        $"Encontrado: {inexistente.Titulo}"
     );
+}
+
+
+// Eliminar del Árbol B+
+Console.WriteLine("\nEliminando código 1004:");
+
+bool eliminado = arbol.Eliminar(1004);
+
+if (eliminado)
+{
+    Console.WriteLine("Libro eliminado correctamente.");
 }
 else
 {
     Console.WriteLine("Libro no encontrado.");
 }
+
+Console.WriteLine("\nRecorrido después de eliminar 1004:");
+arbol.Recorrer();
+
+
+// Más eliminaciones para probar rebalanceo
+Console.WriteLine("\nEliminando 1001 y 1002...");
+
+arbol.Eliminar(1001);
+arbol.Eliminar(1002);
+
+Console.WriteLine("\nEstructura final:");
+arbol.Imprimir();
+
+Console.WriteLine("\nRecorrido final:");
+arbol.Recorrer();
