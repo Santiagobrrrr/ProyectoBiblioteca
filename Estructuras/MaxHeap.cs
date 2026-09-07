@@ -215,5 +215,34 @@ namespace ProyectoBiblioteca.Estructuras
 
             return -1;
         }
+        public bool EliminarPorCodigo(int codigo)
+        {
+            int indice = BuscarIndicePorCodigo(codigo);
+
+            if (indice == -1)
+            {
+                return false;
+            }
+
+            cantidad--;
+
+            if (indice < cantidad)
+            {
+                Libro ultimo = heap[cantidad];
+
+                heap[indice] = ultimo;
+
+                Subir(indice);
+
+                int nuevoIndice = BuscarIndicePorCodigo(ultimo.Codigo);
+
+                if (nuevoIndice != -1)
+                {
+                    Bajar(nuevoIndice);
+                }
+            }
+
+            return true;
+        }
     }
 }

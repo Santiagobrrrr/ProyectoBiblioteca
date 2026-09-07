@@ -174,5 +174,23 @@ namespace ProyectoBiblioteca.Servicios
                 );
             }
         }
+
+        public bool EliminarLibro(int codigo)
+        {
+            Libro? libro = arbol.Buscar(codigo);
+
+            if (libro == null)
+            {
+                return false;
+            }
+
+            arbol.Eliminar(codigo);
+            maxHeap.EliminarPorCodigo(codigo);
+            minHeap.EliminarPorCodigo(codigo);
+
+            cantidadLibros--;
+
+            return true;
+        }
     }
 }

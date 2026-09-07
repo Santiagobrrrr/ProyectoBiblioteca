@@ -2,132 +2,46 @@
 using ProyectoBiblioteca.Servicios;
 
 Biblioteca biblioteca = new Biblioteca();
-GestorArchivos gestorArchivos = new GestorArchivos();
+GestorArchivos gestor = new GestorArchivos();
 
-string rutaArchivo = Path.Combine(
+string ruta = Path.Combine(
     "Datos",
     "libros.csv"
 );
 
-gestorArchivos.CargarLibros(
-    rutaArchivo,
-    biblioteca
-);
+gestor.CargarLibros(ruta, biblioteca);
 
-Console.WriteLine("\n===== CATÁLOGO CARGADO =====");
-
+Console.WriteLine("CATÁLOGO ANTES:");
 biblioteca.MostrarCatalogo();
 
+Console.WriteLine("\nEliminando libro 1004...");
 
-Console.WriteLine("\n===== BÚSQUEDA =====");
+bool eliminado = biblioteca.EliminarLibro(1004);
 
-Libro? encontrado =
-    biblioteca.BuscarLibro(1006);
-
-if (encontrado != null)
+if (eliminado)
 {
-    Console.WriteLine(
-        $"Encontrado: {encontrado.Titulo}"
-    );
+    Console.WriteLine("Libro eliminado.");
 }
 else
 {
-    Console.WriteLine(
-        "Libro no encontrado."
-    );
+    Console.WriteLine("Libro no encontrado.");
 }
 
+Console.WriteLine("\nCATÁLOGO DESPUÉS:");
+biblioteca.MostrarCatalogo();
 
-Console.WriteLine("\n===== MÁS PRESTADO =====");
+Console.WriteLine("\nBUSCANDO 1004:");
 
-Libro? masPrestado =
-    biblioteca.ObtenerMasPrestado();
+Libro? libro = biblioteca.BuscarLibro(1004);
 
-if (masPrestado != null)
+if (libro == null)
 {
-    Console.WriteLine(
-        $"{masPrestado.Titulo} - " +
-        $"{masPrestado.VecesPrestado} préstamos"
-    );
-}
-
-
-Console.WriteLine("\n===== MENOR DISPONIBILIDAD =====");
-
-Libro? menorDisponibilidad =
-    biblioteca.ObtenerMenorDisponibilidad();
-
-if (menorDisponibilidad != null)
-{
-    Console.WriteLine(
-        $"{menorDisponibilidad.Titulo} - " +
-        $"{menorDisponibilidad.CopiasDisponibles} copias"
-    );
-}
-
-Console.WriteLine("\n===== PRÉSTAMO =====");
-
-Libro? antesPrestamo =
-    biblioteca.BuscarLibro(1001);
-
-if (antesPrestamo != null)
-{
-    Console.WriteLine(
-        $"Antes: {antesPrestamo.CopiasDisponibles} copias - " +
-        $"{antesPrestamo.VecesPrestado} préstamos"
-    );
-}
-
-bool prestado =
-    biblioteca.PrestarLibro(1001);
-
-if (prestado)
-{
-    Console.WriteLine("Préstamo realizado correctamente.");
+    Console.WriteLine("El libro ya no existe.");
 }
 else
 {
-    Console.WriteLine("No fue posible realizar el préstamo.");
+    Console.WriteLine("El libro todavía existe.");
 }
 
-Libro? despuesPrestamo =
-    biblioteca.BuscarLibro(1001);
-
-if (despuesPrestamo != null)
-{
-    Console.WriteLine(
-        $"Después: {despuesPrestamo.CopiasDisponibles} copias - " +
-        $"{despuesPrestamo.VecesPrestado} préstamos"
-    );
-}
-
-
-Console.WriteLine("\n===== DEVOLUCIÓN =====");
-
-bool devuelto =
-    biblioteca.DevolverLibro(1001);
-
-if (devuelto)
-{
-    Console.WriteLine("Devolución realizada correctamente.");
-}
-else
-{
-    Console.WriteLine("No fue posible realizar la devolución.");
-}
-
-Libro? despuesDevolucion =
-    biblioteca.BuscarLibro(1001);
-
-if (despuesDevolucion != null)
-{
-    Console.WriteLine(
-        $"Después de devolver: " +
-        $"{despuesDevolucion.CopiasDisponibles} copias - " +
-        $"{despuesDevolucion.VecesPrestado} préstamos"
-    );
-}
-
-Console.WriteLine("\n===== CATÁLOGO ORDENADO POR TÍTULO =====");
-
-biblioteca.MostrarCatalogoOrdenadoPorTitulo();
+Console.WriteLine("\nESTRUCTURAS:");
+biblioteca.MostrarEstructuras();
