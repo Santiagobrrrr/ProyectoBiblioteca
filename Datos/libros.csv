@@ -1,0 +1,9 @@
+codigo,titulo,autor,categoria,copiasDisponibles,vecesPrestado
+1001,El Principito,Antoine de Saint-Exupéry,Literatura,5,10
+1002,Clean Code,Robert C. Martin,Programación,3,20
+1003,Don Quijote,Miguel de Cervantes,Literatura,4,15
+1004,1984,George Orwell,Ciencia ficción,2,25
+1005,Harry Potter,J. K. Rowling,Fantasía,6,30
+1006,El Hobbit,J. R. R. Tolkien,Fantasía,4,22
+1007,Crónica de una muerte anunciada,Gabriel García Márquez,Literatura,3,17
+1008,Fahrenheit 451,Ray Bradbury,Ciencia ficción,5,19
