@@ -83,5 +83,49 @@ namespace ProyectoBiblioteca.Servicios
             Console.WriteLine("\nMIN HEAP:");
             minHeap.Imprimir();
         }
+
+        public bool PrestarLibro(int codigo)
+        {
+            Libro? libro = arbol.Buscar(codigo);
+
+            if (libro == null)
+            {
+                return false;
+            }
+
+            if (libro.CopiasDisponibles <= 0)
+            {
+                return false;
+            }
+
+            libro.CopiasDisponibles--;
+            libro.VecesPrestado++;
+
+            maxHeap.Reorganizar(codigo);
+            minHeap.Reorganizar(codigo);
+
+            return true;
+        }
+
+        public bool DevolverLibro(int codigo)
+        {
+            Libro? libro = arbol.Buscar(codigo);
+
+            if (libro == null)
+            {
+                return false;
+            }
+
+            if (libro.CopiasDisponibles >= libro.CopiasTotales)
+            {
+                return false;
+            }
+
+            libro.CopiasDisponibles++;
+
+            minHeap.Reorganizar(codigo);
+
+            return true;
+        }
     }
 }

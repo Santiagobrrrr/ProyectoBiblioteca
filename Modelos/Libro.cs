@@ -8,6 +8,8 @@ namespace ProyectoBiblioteca.Modelos;
         public string Categoria { get; set; }
         public int CopiasDisponibles { get; set; }
         public int VecesPrestado { get; set; }
+        public int CopiasTotales { get; private set; }
+        
 
         public Libro( // Constructor 
             int codigo,
@@ -23,5 +25,8 @@ namespace ProyectoBiblioteca.Modelos;
             Categoria = categoria;
             CopiasDisponibles = copiasDisponibles;
             VecesPrestado = vecesPrestado;
+            CopiasTotales = copiasDisponibles;
         }
+    
+    
     }

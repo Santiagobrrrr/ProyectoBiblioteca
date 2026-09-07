@@ -64,3 +64,66 @@ if (menorDisponibilidad != null)
         $"{menorDisponibilidad.CopiasDisponibles} copias"
     );
 }
+
+Console.WriteLine("\n===== PRÉSTAMO =====");
+
+Libro? antesPrestamo =
+    biblioteca.BuscarLibro(1001);
+
+if (antesPrestamo != null)
+{
+    Console.WriteLine(
+        $"Antes: {antesPrestamo.CopiasDisponibles} copias - " +
+        $"{antesPrestamo.VecesPrestado} préstamos"
+    );
+}
+
+bool prestado =
+    biblioteca.PrestarLibro(1001);
+
+if (prestado)
+{
+    Console.WriteLine("Préstamo realizado correctamente.");
+}
+else
+{
+    Console.WriteLine("No fue posible realizar el préstamo.");
+}
+
+Libro? despuesPrestamo =
+    biblioteca.BuscarLibro(1001);
+
+if (despuesPrestamo != null)
+{
+    Console.WriteLine(
+        $"Después: {despuesPrestamo.CopiasDisponibles} copias - " +
+        $"{despuesPrestamo.VecesPrestado} préstamos"
+    );
+}
+
+
+Console.WriteLine("\n===== DEVOLUCIÓN =====");
+
+bool devuelto =
+    biblioteca.DevolverLibro(1001);
+
+if (devuelto)
+{
+    Console.WriteLine("Devolución realizada correctamente.");
+}
+else
+{
+    Console.WriteLine("No fue posible realizar la devolución.");
+}
+
+Libro? despuesDevolucion =
+    biblioteca.BuscarLibro(1001);
+
+if (despuesDevolucion != null)
+{
+    Console.WriteLine(
+        $"Después de devolver: " +
+        $"{despuesDevolucion.CopiasDisponibles} copias - " +
+        $"{despuesDevolucion.VecesPrestado} préstamos"
+    );
+}

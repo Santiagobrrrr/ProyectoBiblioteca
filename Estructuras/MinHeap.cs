@@ -132,5 +132,37 @@ namespace ProyectoBiblioteca.Estructuras
                 );
             }
         }
+
+        public void Reorganizar(int codigo)
+        {
+            int indice = BuscarIndicePorCodigo(codigo);
+
+            if (indice == -1)
+            {
+                return;
+            }
+
+            Subir(indice);
+
+            indice = BuscarIndicePorCodigo(codigo);
+
+            if (indice != -1)
+            {
+                Bajar(indice);
+            }
+        }
+
+        private int BuscarIndicePorCodigo(int codigo)
+        {
+            for (int i = 0; i < cantidad; i++)
+            {
+                if (heap[i].Codigo == codigo)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
     }
 }
