@@ -127,5 +127,52 @@ namespace ProyectoBiblioteca.Servicios
 
             return true;
         }
+
+        public void MostrarCatalogoOrdenadoPorTitulo()
+        {
+            if (cantidadLibros == 0)
+            {
+                Console.WriteLine("No hay libros registrados.");
+                return;
+            }
+
+            Libro[] libros = new Libro[cantidadLibros];
+
+            int cantidad = arbol.CopiarLibros(libros);
+
+            // Ordenamiento por inserción
+            for (int i = 1; i < cantidad; i++)
+            {
+                Libro actual = libros[i];
+                int j = i - 1;
+
+                while (
+                    j >= 0 &&
+                    string.Compare(
+                        libros[j].Titulo,
+                        actual.Titulo,
+                        StringComparison.OrdinalIgnoreCase
+                    ) > 0
+                )
+                {
+                    libros[j + 1] = libros[j];
+                    j--;
+                }
+
+                libros[j + 1] = actual;
+            }
+
+            for (int i = 0; i < cantidad; i++)
+            {
+                Console.WriteLine(
+                    $"{libros[i].Codigo} | " +
+                    $"{libros[i].Titulo} | " +
+                    $"{libros[i].Autor} | " +
+                    $"{libros[i].Categoria} | " +
+                    $"Copias: {libros[i].CopiasDisponibles} | " +
+                    $"Préstamos: {libros[i].VecesPrestado}"
+                );
+            }
+        }
     }
 }

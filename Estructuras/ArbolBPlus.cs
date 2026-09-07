@@ -1574,5 +1574,34 @@ namespace ProyectoBiblioteca.Estructuras
                 }
             }
         }
+
+        public int CopiarLibros(Libro[] libros)
+        {
+            Nodo? actual = raiz;
+            int posicion = 0;
+
+            // Llegar a la primera hoja
+            while (actual != null && !actual.EsHoja)
+            {
+                actual = actual.Hijos[0];
+            }
+
+            // Recorrer todas las hojas
+            while (actual != null)
+            {
+                for (int i = 0; i < actual.CantidadClaves; i++)
+                {
+                    if (actual.Libros[i] != null)
+                    {
+                        libros[posicion] = actual.Libros[i]!;
+                        posicion++;
+                    }
+                }
+
+                actual = actual.Siguiente;
+            }
+
+            return posicion;
+        }
     }
 }

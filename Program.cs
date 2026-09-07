@@ -127,3 +127,7 @@ if (despuesDevolucion != null)
         $"{despuesDevolucion.VecesPrestado} préstamos"
     );
 }
+
+Console.WriteLine("\n===== CATÁLOGO ORDENADO POR TÍTULO =====");
+
+biblioteca.MostrarCatalogoOrdenadoPorTitulo();
