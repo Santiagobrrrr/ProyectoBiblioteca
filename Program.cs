@@ -1,15 +1,15 @@
 ﻿using ProyectoBiblioteca.Modelos;
 using ProyectoBiblioteca.Servicios;
-
+// Se crean los servicios principales del sistema
 Biblioteca biblioteca = new Biblioteca();
 GestorArchivos gestorArchivos = new GestorArchivos();
 
 string rutaArchivo = Path.Combine("Datos", "libros.csv");
-
+// Carga inicial de libros desde el archivo CSV
 gestorArchivos.CargarLibros(rutaArchivo, biblioteca);
 
 int opcion;
-
+// Menú principal del sistema
 do
 {
     Console.WriteLine("\n==============================");

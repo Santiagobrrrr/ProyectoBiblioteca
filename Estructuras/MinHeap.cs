@@ -2,6 +2,7 @@ using ProyectoBiblioteca.Modelos;
 
 namespace ProyectoBiblioteca.Estructuras
 {
+    // Min Heap ordenado por cantidad de copias disponibles
     public class MinHeap
     {
         private Libro[] heap;
@@ -12,7 +13,7 @@ namespace ProyectoBiblioteca.Estructuras
             heap = new Libro[capacidadInicial];
             cantidad = 0;
         }
-
+        // Inserta un libro y reorganiza el Heap
         public void Insertar(Libro libro)
         {
             if (cantidad == heap.Length)
@@ -54,7 +55,7 @@ namespace ProyectoBiblioteca.Estructuras
 
             return minimo;
         }
-
+        // Mueve un elemento hacia arriba si tiene menor disponibilidad
         private void Subir(int indice)
         {
             while (indice > 0)
@@ -71,7 +72,7 @@ namespace ProyectoBiblioteca.Estructuras
                 indice = padre;
             }
         }
-
+        // Mueve un elemento hacia abajo para mantener el Min Heap
         private void Bajar(int indice)
         {
             while (true)
@@ -132,7 +133,7 @@ namespace ProyectoBiblioteca.Estructuras
                 );
             }
         }
-
+        // Reorganiza un libro después de cambiar sus copias disponibles
         public void Reorganizar(int codigo)
         {
             int indice = BuscarIndicePorCodigo(codigo);
@@ -177,7 +178,7 @@ namespace ProyectoBiblioteca.Estructuras
 
             return null;
         }
-
+        // Elimina un libro específico y reorganiza el Heap
         public bool EliminarPorCodigo(int codigo)
         {
             int indice = BuscarIndicePorCodigo(codigo);

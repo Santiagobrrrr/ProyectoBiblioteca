@@ -3,6 +3,7 @@ using ProyectoBiblioteca.Estructuras;
 
 namespace ProyectoBiblioteca.Servicios
 {
+    // Coordina las operaciones entre el Árbol B+, Max Heap y Min Heap  
     public class Biblioteca
     {
         private readonly ArbolBPlus arbol;
@@ -19,7 +20,7 @@ namespace ProyectoBiblioteca.Servicios
 
             cantidadLibros = 0;
         }
-
+        // Registra el mismo libro en las tres estructuras
         public bool RegistrarLibro(Libro libro)
         {
             if (arbol.Buscar(libro.Codigo) != null)
@@ -35,7 +36,7 @@ namespace ProyectoBiblioteca.Servicios
 
             return true;
         }
-
+        // La búsqueda principal por código se realiza en el Árbol B+
         public Libro? BuscarLibro(int codigo)
         {
             return arbol.Buscar(codigo);
@@ -83,7 +84,7 @@ namespace ProyectoBiblioteca.Servicios
             Console.WriteLine("\nMIN HEAP:");
             minHeap.Imprimir();
         }
-
+        // Actualiza disponibilidad, préstamos y reorganiza ambos Heaps
         public bool PrestarLibro(int codigo)
         {
             Libro? libro = arbol.Buscar(codigo);
@@ -106,7 +107,7 @@ namespace ProyectoBiblioteca.Servicios
 
             return true;
         }
-
+        // Incrementa las copias disponibles y reorganiza el Min Heap
         public bool DevolverLibro(int codigo)
         {
             Libro? libro = arbol.Buscar(codigo);
@@ -127,7 +128,7 @@ namespace ProyectoBiblioteca.Servicios
 
             return true;
         }
-
+        // Copia los libros a un arreglo y los ordena por título
         public void MostrarCatalogoOrdenadoPorTitulo()
         {
             if (cantidadLibros == 0)
@@ -174,7 +175,7 @@ namespace ProyectoBiblioteca.Servicios
                 );
             }
         }
-
+        // Elimina el libro de las tres estructuras
         public bool EliminarLibro(int codigo)
         {
             Libro? libro = arbol.Buscar(codigo);

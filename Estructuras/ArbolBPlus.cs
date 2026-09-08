@@ -4,10 +4,8 @@ namespace ProyectoBiblioteca.Estructuras
 {
     public class ArbolBPlus
     {
-        // ==========================================
-        // NODO INTERNO DEL ÁRBOL B+
-        // ==========================================
 
+        // Representa un nodo del árbol, ya sea interno o una hoja.
         private class Nodo
         {
             public bool EsHoja;
@@ -17,7 +15,7 @@ namespace ProyectoBiblioteca.Estructuras
             public Libro?[] Libros;
             public Nodo?[] Hijos;
 
-            // Sirve para enlazar las hojas del B+
+            // En las hojas apunta a la siguiente hoja para recorrerlas en orden.
             public Nodo? Siguiente;
 
             public Nodo(int orden, bool esHoja)
@@ -25,36 +23,24 @@ namespace ProyectoBiblioteca.Estructuras
                 EsHoja = esHoja;
                 CantidadClaves = 0;
 
-                // Un árbol de orden m tiene como máximo
-                // m - 1 claves por nodo.
+                // Un nodo de orden m puede guardar hasta m - 1 claves.
                 Claves = new int[orden - 1];
 
-                // Los libros se utilizan en las hojas.
                 Libros = new Libro?[orden - 1];
 
-                // Un nodo interno puede tener máximo m hijos.
+                // Un nodo interno puede tener hasta m hijos.
                 Hijos = new Nodo?[orden];
 
                 Siguiente = null;
             }
         }
 
-
-        // ==========================================
-        // ATRIBUTOS DEL ÁRBOL
-        // ==========================================
-
         private Nodo raiz;
         private int orden;
 
-
-        // ==========================================
-        // CONSTRUCTOR
-        // ==========================================
-
+        // Crea el árbol con una hoja vacía como raíz.
         public ArbolBPlus(int orden = 4)
         {
-            // Evitamos órdenes demasiado pequeños.
             if (orden < 3)
             {
                 orden = 3;
@@ -62,19 +48,14 @@ namespace ProyectoBiblioteca.Estructuras
 
             this.orden = orden;
 
-            // Al inicio solamente existe una hoja,
-            // que también funciona como raíz.
+            // Al inicio la raíz también es una hoja.
             raiz = new Nodo(orden, true);
         }
 
-
-        // ==========================================
-        // INSERTAR
-        // ==========================================
-
+        // Inserta un libro usando su código como clave.
         public void Insertar(Libro libro)
         {
-            // No permitimos códigos duplicados.
+            // Evita registrar dos libros con el mismo código.
             if (Buscar(libro.Codigo) != null)
             {
                 throw new InvalidOperationException(
@@ -89,8 +70,7 @@ namespace ProyectoBiblioteca.Estructuras
                 out Nodo? nuevoDerecho
             );
 
-            // Si la raíz fue la que se dividió,
-            // debemos crear una nueva raíz.
+            // Si la raíz se divide, se crea una nueva raíz.
             if (huboDivision && nuevoDerecho != null)
             {
                 Nodo nuevaRaiz = new Nodo(orden, false);
@@ -106,11 +86,7 @@ namespace ProyectoBiblioteca.Estructuras
             }
         }
 
-
-        // ==========================================
-        // INSERCIÓN RECURSIVA
-        // ==========================================
-
+        // Inserta de forma recursiva y avisa si un nodo debe dividirse.
         private bool InsertarRecursivo(
             Nodo nodo,
             Libro libro,
@@ -120,15 +96,9 @@ namespace ProyectoBiblioteca.Estructuras
             clavePromovida = 0;
             nuevoDerecho = null;
 
-
-            // ======================================
-            // CASO 1: EL NODO ES UNA HOJA
-            // ======================================
-
+            // Si llegamos a una hoja, insertamos o dividimos según haya espacio.
             if (nodo.EsHoja)
             {
-                // Si todavía tiene espacio,
-                // simplemente insertamos.
                 if (nodo.CantidadClaves < orden - 1)
                 {
                     InsertarEnHoja(nodo, libro);
@@ -136,7 +106,6 @@ namespace ProyectoBiblioteca.Estructuras
                     return false;
                 }
 
-                // Si está llena, la dividimos.
                 DividirHoja(
                     nodo,
                     libro,
@@ -147,14 +116,9 @@ namespace ProyectoBiblioteca.Estructuras
                 return true;
             }
 
-
-            // ======================================
-            // CASO 2: NODO INTERNO
-            // ======================================
-
+            // Si es un nodo interno, elegimos por cuál hijo continuar.
             int indiceHijo = 0;
 
-            // Buscamos por cuál hijo debemos bajar.
             while (
                 indiceHijo < nodo.CantidadClaves &&
                 libro.Codigo >= nodo.Claves[indiceHijo]
@@ -172,8 +136,6 @@ namespace ProyectoBiblioteca.Estructuras
                 );
             }
 
-
-            // Insertamos recursivamente en el hijo.
             bool hijoSeDividio = InsertarRecursivo(
                 hijo,
                 libro,
@@ -181,17 +143,11 @@ namespace ProyectoBiblioteca.Estructuras
                 out Nodo? derechoDelHijo
             );
 
-
-            // Si el hijo no se dividió,
-            // no tenemos que modificar este nodo.
             if (!hijoSeDividio || derechoDelHijo == null)
             {
                 return false;
             }
 
-
-            // Si el nodo padre todavía tiene espacio,
-            // insertamos la clave promovida.
             if (nodo.CantidadClaves < orden - 1)
             {
                 InsertarEnNodoInterno(
@@ -204,9 +160,6 @@ namespace ProyectoBiblioteca.Estructuras
                 return false;
             }
 
-
-            // Si el padre también está lleno,
-            // debemos dividirlo.
             DividirNodoInterno(
                 nodo,
                 indiceHijo,
@@ -219,19 +172,13 @@ namespace ProyectoBiblioteca.Estructuras
             return true;
         }
 
-
-        // ==========================================
-        // INSERTAR EN UNA HOJA CON ESPACIO
-        // ==========================================
-
+        // Inserta un libro en una hoja manteniendo las claves ordenadas.
         private void InsertarEnHoja(
             Nodo hoja,
             Libro libro)
         {
             int i = hoja.CantidadClaves - 1;
 
-            // Movemos hacia la derecha las claves
-            // mayores al nuevo código.
             while (
                 i >= 0 &&
                 libro.Codigo < hoja.Claves[i]
@@ -244,37 +191,27 @@ namespace ProyectoBiblioteca.Estructuras
                 i--;
             }
 
-            // Insertamos en la posición correcta.
             hoja.Claves[i + 1] = libro.Codigo;
             hoja.Libros[i + 1] = libro;
 
             hoja.CantidadClaves++;
         }
 
-
-        // ==========================================
-        // DIVIDIR UNA HOJA
-        // ==========================================
-
+        // Divide una hoja llena y crea una nueva hoja a la derecha.
         private void DividirHoja(
             Nodo hoja,
             Libro libro,
             out int clavePromovida,
             out Nodo? nuevaHoja)
         {
-            // La hoja está llena.
-            // Creamos espacio temporal para incluir
-            // también el nuevo libro.
+            // Se usa espacio temporal para incluir el nuevo libro antes de dividir.
             int[] clavesTemporales = new int[orden];
 
             Libro?[] librosTemporales =
                 new Libro?[orden];
 
-
             int posicion = 0;
 
-            // Determinamos dónde debería ir
-            // el nuevo código.
             while (
                 posicion < hoja.CantidadClaves &&
                 hoja.Claves[posicion] < libro.Codigo
@@ -283,8 +220,6 @@ namespace ProyectoBiblioteca.Estructuras
                 posicion++;
             }
 
-
-            // Copiamos lo anterior.
             for (int i = 0; i < posicion; i++)
             {
                 clavesTemporales[i] =
@@ -295,15 +230,12 @@ namespace ProyectoBiblioteca.Estructuras
             }
 
 
-            // Insertamos el nuevo libro.
             clavesTemporales[posicion] =
                 libro.Codigo;
 
             librosTemporales[posicion] =
                 libro;
 
-
-            // Copiamos lo que estaba después.
             for (
                 int i = posicion;
                 i < hoja.CantidadClaves;
@@ -316,17 +248,14 @@ namespace ProyectoBiblioteca.Estructuras
                     hoja.Libros[i];
             }
 
-
             int totalClaves =
                 hoja.CantidadClaves + 1;
 
-
-            // Dividimos aproximadamente a la mitad.
+            // Las claves se reparten aproximadamente a la mitad.
             int cantidadIzquierda =
                 (totalClaves + 1) / 2;
 
 
-            // Limpiamos/reconstruimos la hoja original.
             hoja.Claves =
                 new int[orden - 1];
 
@@ -336,8 +265,6 @@ namespace ProyectoBiblioteca.Estructuras
             hoja.CantidadClaves =
                 cantidadIzquierda;
 
-
-            // Primera mitad permanece en la hoja vieja.
             for (
                 int i = 0;
                 i < cantidadIzquierda;
@@ -350,11 +277,8 @@ namespace ProyectoBiblioteca.Estructuras
                     librosTemporales[i];
             }
 
-
-            // Creamos la hoja derecha.
             nuevaHoja =
                 new Nodo(orden, true);
-
 
             int cantidadDerecha =
                 totalClaves - cantidadIzquierda;
@@ -362,8 +286,6 @@ namespace ProyectoBiblioteca.Estructuras
             nuevaHoja.CantidadClaves =
                 cantidadDerecha;
 
-
-            // Segunda mitad pasa a la nueva hoja.
             for (
                 int i = 0;
                 i < cantidadDerecha;
@@ -380,36 +302,25 @@ namespace ProyectoBiblioteca.Estructuras
                     ];
             }
 
-
-            // ======================================
-            // ENLACE ENTRE HOJAS
-            // ======================================
-
+            // La nueva hoja se enlaza con la siguiente hoja existente.
             nuevaHoja.Siguiente =
                 hoja.Siguiente;
 
             hoja.Siguiente =
                 nuevaHoja;
 
-
-            // La primera clave de la hoja derecha
-            // sube al padre como separador.
+            // La primera clave de la hoja derecha se usa como separador en el padre.
             clavePromovida =
                 nuevaHoja.Claves[0];
         }
 
-
-        // ==========================================
-        // INSERTAR EN NODO INTERNO CON ESPACIO
-        // ==========================================
-
+        // Inserta una clave promovida y el nuevo hijo derecho.
         private void InsertarEnNodoInterno(
             Nodo nodo,
             int indiceHijo,
             int clave,
             Nodo nuevoDerecho)
         {
-            // Movemos claves e hijos hacia la derecha.
             for (
                 int i = nodo.CantidadClaves;
                 i > indiceHijo;
@@ -422,7 +333,6 @@ namespace ProyectoBiblioteca.Estructuras
                     nodo.Hijos[i];
             }
 
-
             nodo.Claves[indiceHijo] =
                 clave;
 
@@ -432,11 +342,7 @@ namespace ProyectoBiblioteca.Estructuras
             nodo.CantidadClaves++;
         }
 
-
-        // ==========================================
-        // DIVIDIR NODO INTERNO
-        // ==========================================
-
+        // Divide un nodo interno y promueve su clave central al padre.
         private void DividirNodoInterno(
             Nodo nodo,
             int indiceHijo,
@@ -451,8 +357,6 @@ namespace ProyectoBiblioteca.Estructuras
             Nodo?[] hijosTemporales =
                 new Nodo?[orden + 1];
 
-
-            // Copiamos claves anteriores.
             for (
                 int i = 0;
                 i < indiceHijo;
@@ -462,13 +366,9 @@ namespace ProyectoBiblioteca.Estructuras
                     nodo.Claves[i];
             }
 
-
-            // Insertamos nueva clave.
             clavesTemporales[indiceHijo] =
                 nuevaClave;
 
-
-            // Copiamos claves posteriores.
             for (
                 int i = indiceHijo;
                 i < nodo.CantidadClaves;
@@ -478,8 +378,6 @@ namespace ProyectoBiblioteca.Estructuras
                     nodo.Claves[i];
             }
 
-
-            // Copiamos hijos anteriores.
             for (
                 int i = 0;
                 i <= indiceHijo;
@@ -489,13 +387,9 @@ namespace ProyectoBiblioteca.Estructuras
                     nodo.Hijos[i];
             }
 
-
-            // Insertamos nuevo hijo.
             hijosTemporales[indiceHijo + 1] =
                 nuevoHijoDerecho;
 
-
-            // Copiamos los hijos posteriores.
             for (
                 int i = indiceHijo + 1;
                 i <= nodo.CantidadClaves;
@@ -505,7 +399,6 @@ namespace ProyectoBiblioteca.Estructuras
                     nodo.Hijos[i];
             }
 
-
             int totalClaves =
                 nodo.CantidadClaves + 1;
 
@@ -513,15 +406,9 @@ namespace ProyectoBiblioteca.Estructuras
             int medio =
                 totalClaves / 2;
 
-
-            // La clave central sube al padre.
+            // En un nodo interno, la clave central es la que sube al padre.
             clavePromovida =
                 clavesTemporales[medio];
-
-
-            // ======================================
-            // RECONSTRUIR NODO IZQUIERDO
-            // ======================================
 
             nodo.Claves =
                 new int[orden - 1];
@@ -532,7 +419,6 @@ namespace ProyectoBiblioteca.Estructuras
             nodo.CantidadClaves =
                 medio;
 
-
             for (
                 int i = 0;
                 i < medio;
@@ -541,7 +427,6 @@ namespace ProyectoBiblioteca.Estructuras
                 nodo.Claves[i] =
                     clavesTemporales[i];
             }
-
 
             for (
                 int i = 0;
@@ -552,11 +437,6 @@ namespace ProyectoBiblioteca.Estructuras
                     hijosTemporales[i];
             }
 
-
-            // ======================================
-            // CREAR NODO DERECHO
-            // ======================================
-
             nuevoDerecho =
                 new Nodo(orden, false);
 
@@ -566,7 +446,6 @@ namespace ProyectoBiblioteca.Estructuras
 
             nuevoDerecho.CantidadClaves =
                 cantidadDerecha;
-
 
             for (
                 int i = 0;
@@ -592,17 +471,11 @@ namespace ProyectoBiblioteca.Estructuras
             }
         }
 
-
-        // ==========================================
-        // BUSCAR
-        // ==========================================
-
+        // Busca un libro por código hasta llegar a la hoja correspondiente.
         public Libro? Buscar(int codigo)
         {
             Nodo actual = raiz;
-
-
-            // Bajamos hasta llegar a una hoja.
+            // Baja por los nodos internos hasta llegar a una hoja.
             while (!actual.EsHoja)
             {
                 int i = 0;
@@ -631,7 +504,6 @@ namespace ProyectoBiblioteca.Estructuras
             }
 
 
-            // Buscamos dentro de la hoja.
             for (
                 int i = 0;
                 i < actual.CantidadClaves;
@@ -647,11 +519,7 @@ namespace ProyectoBiblioteca.Estructuras
             return null;
         }
 
-
-        // ==========================================
-        // ELIMINAR
-        // ==========================================
-
+        // Elimina un código y ajusta la raíz si queda vacía.
         public bool Eliminar(int codigo)
         {
             bool eliminado =
@@ -660,15 +528,11 @@ namespace ProyectoBiblioteca.Estructuras
                     codigo
                 );
 
-
             if (!eliminado)
             {
                 return false;
             }
 
-
-            // Si la raíz interna quedó sin claves,
-            // su único hijo pasa a ser la raíz.
             if (
                 !raiz.EsHoja &&
                 raiz.CantidadClaves == 0 &&
@@ -679,21 +543,14 @@ namespace ProyectoBiblioteca.Estructuras
                     raiz.Hijos[0]!;
             }
 
-
             return true;
         }
 
-
-        // ==========================================
-        // ELIMINAR RECURSIVAMENTE
-        // ==========================================
-
+        // Elimina recursivamente y rebalancea cuando hace falta.
         private bool EliminarRecursivo(
             Nodo nodo,
             int codigo)
         {
-            // Si llegamos a una hoja,
-            // eliminamos directamente.
             if (nodo.EsHoja)
             {
                 return EliminarDeHoja(
@@ -702,11 +559,8 @@ namespace ProyectoBiblioteca.Estructuras
                 );
             }
 
-
             int indiceHijo = 0;
 
-
-            // Buscamos por cuál hijo bajar.
             while (
                 indiceHijo < nodo.CantidadClaves &&
                 codigo >= nodo.Claves[indiceHijo]
@@ -719,12 +573,10 @@ namespace ProyectoBiblioteca.Estructuras
             Nodo? hijo =
                 nodo.Hijos[indiceHijo];
 
-
             if (hijo == null)
             {
                 return false;
             }
-
 
             bool eliminado =
                 EliminarRecursivo(
@@ -732,15 +584,12 @@ namespace ProyectoBiblioteca.Estructuras
                     codigo
                 );
 
-
             if (!eliminado)
             {
                 return false;
             }
 
-
-            // Si quedó con menos claves
-            // de las permitidas, rebalanceamos.
+            // Si el hijo quedó con pocas claves, se redistribuye o fusiona.
             if (NecesitaRebalanceo(hijo))
             {
                 RebalancearHijo(
@@ -749,27 +598,18 @@ namespace ProyectoBiblioteca.Estructuras
                 );
             }
 
-
-            // Actualizamos separadores internos.
             ActualizarSeparadores(nodo);
-
-
             return true;
         }
 
-
-        // ==========================================
-        // ELIMINAR DIRECTAMENTE DE UNA HOJA
-        // ==========================================
-
+        // Elimina un libro de una hoja y compacta sus elementos.
         private bool EliminarDeHoja(
             Nodo hoja,
             int codigo)
         {
+            // Busca la posición del código dentro de la hoja.
             int posicion = -1;
 
-
-            // Buscamos el código.
             for (
                 int i = 0;
                 i < hoja.CantidadClaves;
@@ -783,16 +623,11 @@ namespace ProyectoBiblioteca.Estructuras
                 }
             }
 
-
-            // No existe.
             if (posicion == -1)
             {
                 return false;
             }
 
-
-            // Movemos hacia la izquierda
-            // los datos posteriores.
             for (
                 int i = posicion;
                 i < hoja.CantidadClaves - 1;
@@ -805,11 +640,8 @@ namespace ProyectoBiblioteca.Estructuras
                     hoja.Libros[i + 1];
             }
 
-
             hoja.CantidadClaves--;
 
-
-            // Limpiamos el espacio sobrante.
             hoja.Claves[
                 hoja.CantidadClaves
             ] = 0;
@@ -818,24 +650,17 @@ namespace ProyectoBiblioteca.Estructuras
                 hoja.CantidadClaves
             ] = null;
 
-
             return true;
         }
 
-
-        // ==========================================
-        // DETERMINAR SI NECESITA REBALANCEO
-        // ==========================================
-
+        // Verifica si un nodo quedó por debajo del mínimo permitido.
         private bool NecesitaRebalanceo(
             Nodo nodo)
         {
-            // La raíz puede tener menos elementos.
             if (nodo == raiz)
             {
                 return false;
             }
-
 
             if (nodo.EsHoja)
             {
@@ -847,21 +672,15 @@ namespace ProyectoBiblioteca.Estructuras
                     minimoClavesHoja;
             }
 
-
             int minimoClavesInterno =
                 (orden - 1) / 2;
-
 
             return
                 nodo.CantidadClaves <
                 minimoClavesInterno;
         }
 
-
-        // ==========================================
-        // REBALANCEAR HIJO
-        // ==========================================
-
+        // Rebalancea un hijo según sea hoja o nodo interno.
         private void RebalancearHijo(
             Nodo padre,
             int indiceHijo)
@@ -875,10 +694,8 @@ namespace ProyectoBiblioteca.Estructuras
                 return;
             }
 
-
             Nodo? izquierdo = null;
             Nodo? derecho = null;
-
 
             if (indiceHijo > 0)
             {
@@ -899,7 +716,6 @@ namespace ProyectoBiblioteca.Estructuras
                         indiceHijo + 1
                     ];
             }
-
 
             if (hijo.EsHoja)
             {
@@ -922,15 +738,10 @@ namespace ProyectoBiblioteca.Estructuras
                 );
             }
 
-
             ActualizarSeparadores(padre);
         }
 
-
-        // ==========================================
-        // REBALANCEAR HOJA
-        // ==========================================
-
+        // Rebalancea una hoja tomando datos de un hermano o fusionando.
         private void RebalancearHoja(
             Nodo padre,
             int indiceHijo,
@@ -941,17 +752,12 @@ namespace ProyectoBiblioteca.Estructuras
             int minimo =
                 orden / 2;
 
-
-            // ======================================
-            // PEDIR PRESTADO AL IZQUIERDO
-            // ======================================
-
+            // Primero se intenta tomar una clave del hermano izquierdo.
             if (
                 izquierdo != null &&
                 izquierdo.CantidadClaves > minimo
             )
             {
-                // Hacemos espacio al principio.
                 for (
                     int i = hoja.CantidadClaves;
                     i > 0;
@@ -979,7 +785,6 @@ namespace ProyectoBiblioteca.Estructuras
                         ultimaPosicion
                     ];
 
-
                 hoja.CantidadClaves++;
 
                 izquierdo.CantidadClaves--;
@@ -997,11 +802,7 @@ namespace ProyectoBiblioteca.Estructuras
                 return;
             }
 
-
-            // ======================================
-            // PEDIR PRESTADO AL DERECHO
-            // ======================================
-
+            // Si no se puede, se intenta tomar una clave del hermano derecho.
             if (
                 derecho != null &&
                 derecho.CantidadClaves > minimo
@@ -1018,7 +819,6 @@ namespace ProyectoBiblioteca.Estructuras
                 hoja.CantidadClaves++;
 
 
-                // Movemos el derecho hacia la izquierda.
                 for (
                     int i = 0;
                     i < derecho.CantidadClaves - 1;
@@ -1031,9 +831,7 @@ namespace ProyectoBiblioteca.Estructuras
                         derecho.Libros[i + 1];
                 }
 
-
                 derecho.CantidadClaves--;
-
 
                 derecho.Claves[
                     derecho.CantidadClaves
@@ -1047,16 +845,11 @@ namespace ProyectoBiblioteca.Estructuras
                 return;
             }
 
-
-            // ======================================
-            // FUSIÓN CON EL IZQUIERDO
-            // ======================================
-
+            // Si ningún hermano puede prestar, se fusiona con el izquierdo.
             if (izquierdo != null)
             {
                 int posicion =
                     izquierdo.CantidadClaves;
-
 
                 for (
                     int i = 0;
@@ -1077,7 +870,6 @@ namespace ProyectoBiblioteca.Estructuras
                     hoja.CantidadClaves;
 
 
-                // Enlazamos la lista de hojas.
                 izquierdo.Siguiente =
                     hoja.Siguiente;
 
@@ -1091,11 +883,7 @@ namespace ProyectoBiblioteca.Estructuras
                 return;
             }
 
-
-            // ======================================
-            // FUSIÓN CON EL DERECHO
-            // ======================================
-
+            // Si no hay izquierdo disponible, se fusiona con el derecho.
             if (derecho != null)
             {
                 int posicion =
@@ -1131,12 +919,7 @@ namespace ProyectoBiblioteca.Estructuras
                 );
             }
         }
-
-
-        // ==========================================
-        // REBALANCEAR NODO INTERNO
-        // ==========================================
-
+        // Rebalancea un nodo interno moviendo o fusionando hijos.
         private void RebalancearNodoInterno(
             Nodo padre,
             int indiceHijo,
@@ -1147,17 +930,12 @@ namespace ProyectoBiblioteca.Estructuras
             int minimo =
                 (orden - 1) / 2;
 
-
-            // ======================================
-            // PEDIR UN HIJO AL IZQUIERDO
-            // ======================================
-
+            // En nodos internos se intenta mover un hijo desde la izquierda.
             if (
                 izquierdo != null &&
                 izquierdo.CantidadClaves > minimo
             )
             {
-                // Abrimos espacio al inicio.
                 for (
                     int i =
                         nodo.CantidadClaves + 1;
@@ -1174,16 +952,13 @@ namespace ProyectoBiblioteca.Estructuras
                         izquierdo.CantidadClaves
                     ];
 
-
                 izquierdo.Hijos[
                     izquierdo.CantidadClaves
                 ] = null;
 
-
                 izquierdo.CantidadClaves--;
 
                 nodo.CantidadClaves++;
-
 
                 ActualizarSeparadores(
                     izquierdo
@@ -1197,11 +972,7 @@ namespace ProyectoBiblioteca.Estructuras
                 return;
             }
 
-
-            // ======================================
-            // PEDIR UN HIJO AL DERECHO
-            // ======================================
-
+            // Si no es posible, se intenta mover un hijo desde la derecha.
             if (
                 derecho != null &&
                 derecho.CantidadClaves > minimo
@@ -1215,7 +986,6 @@ namespace ProyectoBiblioteca.Estructuras
                 nodo.CantidadClaves++;
 
 
-                // Desplazamos hijos del derecho.
                 for (
                     int i = 0;
                     i < derecho.CantidadClaves;
@@ -1246,11 +1016,7 @@ namespace ProyectoBiblioteca.Estructuras
                 return;
             }
 
-
-            // ======================================
-            // FUSIÓN CON EL IZQUIERDO
-            // ======================================
-
+            // Si no se pudo redistribuir, se fusiona con el izquierdo.
             if (izquierdo != null)
             {
                 int inicio =
@@ -1288,11 +1054,7 @@ namespace ProyectoBiblioteca.Estructuras
                 return;
             }
 
-
-            // ======================================
-            // FUSIÓN CON EL DERECHO
-            // ======================================
-
+            // Si no hay hermano izquierdo, se fusiona con el derecho.
             if (derecho != null)
             {
                 int inicio =
@@ -1328,16 +1090,11 @@ namespace ProyectoBiblioteca.Estructuras
             }
         }
 
-
-        // ==========================================
-        // ELIMINAR HIJO DEL PADRE
-        // ==========================================
-
+        // Quita del padre la referencia a un hijo eliminado.
         private void EliminarHijoDelPadre(
             Nodo padre,
             int indiceHijo)
         {
-            // Desplazamos los hijos.
             for (
                 int i = indiceHijo;
                 i < padre.CantidadClaves;
@@ -1359,11 +1116,7 @@ namespace ProyectoBiblioteca.Estructuras
             ActualizarSeparadores(padre);
         }
 
-
-        // ==========================================
-        // ACTUALIZAR CLAVES SEPARADORAS
-        // ==========================================
-
+        // Actualiza las claves que separan los subárboles.
         private void ActualizarSeparadores(
             Nodo nodo)
         {
@@ -1392,19 +1145,13 @@ namespace ProyectoBiblioteca.Estructuras
             }
         }
 
-
-        // ==========================================
-        // OBTENER PRIMERA CLAVE DE UN SUBÁRBOL
-        // ==========================================
-
+        // Obtiene la primera clave disponible de un subárbol.
         private int ObtenerPrimeraClave(
             Nodo nodo)
         {
             Nodo actual = nodo;
 
 
-            // Bajamos siempre por el primer hijo
-            // hasta llegar a una hoja.
             while (!actual.EsHoja)
             {
                 Nodo? siguiente =
@@ -1418,11 +1165,9 @@ namespace ProyectoBiblioteca.Estructuras
                     );
                 }
 
-
                 actual =
                     siguiente;
             }
-
 
             if (actual.CantidadClaves == 0)
             {
@@ -1431,21 +1176,15 @@ namespace ProyectoBiblioteca.Estructuras
                 );
             }
 
-
             return actual.Claves[0];
         }
 
-
-        // ==========================================
-        // RECORRER ÁRBOL
-        // ==========================================
-
+        // Recorre todas las hojas enlazadas desde la más izquierda.
         public void Recorrer()
         {
             Nodo? actual = raiz;
 
 
-            // Llegamos a la hoja más a la izquierda.
             while (
                 actual != null &&
                 !actual.EsHoja
@@ -1456,8 +1195,6 @@ namespace ProyectoBiblioteca.Estructuras
             }
 
 
-            // Gracias al atributo Siguiente
-            // podemos recorrer todas las hojas.
             while (actual != null)
             {
                 for (
@@ -1484,11 +1221,7 @@ namespace ProyectoBiblioteca.Estructuras
             }
         }
 
-
-        // ==========================================
-        // IMPRIMIR ESTRUCTURA DEL ÁRBOL
-        // ==========================================
-
+        // Muestra la estructura completa del Árbol B+.
         public void Imprimir()
         {
             Console.WriteLine(
@@ -1501,11 +1234,7 @@ namespace ProyectoBiblioteca.Estructuras
             );
         }
 
-
-        // ==========================================
-        // IMPRIMIR NODOS RECURSIVAMENTE
-        // ==========================================
-
+        // Imprime un nodo y sus hijos de forma recursiva.
         private void ImprimirNodo(
             Nodo nodo,
             int nivel)
@@ -1547,12 +1276,8 @@ namespace ProyectoBiblioteca.Estructuras
                 }
             }
 
-
             Console.WriteLine("]");
 
-
-            // Si es nodo interno,
-            // imprimimos sus hijos.
             if (!nodo.EsHoja)
             {
                 for (
@@ -1575,18 +1300,17 @@ namespace ProyectoBiblioteca.Estructuras
             }
         }
 
+        // Copia los libros a un arreglo recorriendo las hojas.
         public int CopiarLibros(Libro[] libros)
         {
             Nodo? actual = raiz;
             int posicion = 0;
 
-            // Llegar a la primera hoja
             while (actual != null && !actual.EsHoja)
             {
                 actual = actual.Hijos[0];
             }
 
-            // Recorrer todas las hojas
             while (actual != null)
             {
                 for (int i = 0; i < actual.CantidadClaves; i++)

@@ -4,6 +4,7 @@ namespace ProyectoBiblioteca.Servicios
 {
     public class GestorArchivos
     {
+        // Carga libros desde un archivo CSV y los registra en Biblioteca
         public void CargarLibros(
             string rutaArchivo,
             Biblioteca biblioteca)
@@ -19,7 +20,7 @@ namespace ProyectoBiblioteca.Servicios
 
             string[] lineas =
                 File.ReadAllLines(rutaArchivo);
-
+            // La primera línea corresponde al encabezado
             for (int i = 1; i < lineas.Length; i++)
             {
                 string linea = lineas[i];
@@ -67,7 +68,7 @@ namespace ProyectoBiblioteca.Servicios
 
                     continue;
                 }
-
+                // Crear el libro con los datos obtenidos del archivo
                 Libro libro = new Libro(
                     codigo,
                     datos[1],
