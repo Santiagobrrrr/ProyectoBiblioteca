@@ -1,9 +1,15 @@
 codigo,titulo,autor,categoria,copiasDisponibles,vecesPrestado
-1001,El Principito,Antoine de Saint-Exupéry,Literatura,5,10
-1002,Clean Code,Robert C. Martin,Programación,3,20
-1003,Don Quijote,Miguel de Cervantes,Literatura,4,15
-1004,1984,George Orwell,Ciencia ficción,2,25
-1005,Harry Potter,J. K. Rowling,Fantasía,6,30
-1006,El Hobbit,J. R. R. Tolkien,Fantasía,4,22
-1007,Crónica de una muerte anunciada,Gabriel García Márquez,Literatura,3,17
-1008,Fahrenheit 451,Ray Bradbury,Ciencia ficción,5,19
+0001,El Principito,Antoine de Saint-Exupéry,Literatura,4,18
+0002,Clean Code,Robert C. Martin,Tecnología,2,31
+0003,Cien años de soledad,Gabriel García Márquez,Literatura,5,24
+0004,Introducción a los algoritmos,Cormen et al.,Tecnología,3,12
+0006,El universo en una cáscara de nuez,Stephen Hawking,Ciencia,3,9
+0007,Don Quijote de la Mancha,Miguel de Cervantes,Literatura,4,15
+0008,Cosmos,Carl Sagan,Ciencia,2,21
+0009,Design Patterns,Gamma et al.,Tecnología,1,34
+0010,Breve historia del tiempo,Stephen Hawking,Ciencia,3,6
+0011,Dune,Frank Herbert,Ciencia Ficción,2,19
+0012,El hobbit,J.R.R. Tolkien,Fantasía,4,22
+0013,Fundamentos de bases de datos,Elmasri y Navathe,Tecnología,3,11
+0014,La guerra de los mundos,H.G. Wells,Ciencia Ficción,2,16
+0015,Sapiens,Yuval Noah Harari,Historia,3,28
